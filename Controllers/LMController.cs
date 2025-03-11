@@ -7,9 +7,11 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace LMS_API.Controllers
 {
+    [EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*")]
     public class LMController : ApiController
     {
 
@@ -17,6 +19,12 @@ namespace LMS_API.Controllers
         public class LibraryController : ApiController
         {
             private LibraryDBEntities db = new LibraryDBEntities();
+
+            [HttpOptions]
+            public IHttpActionResult Options()
+            {
+                return Ok();
+            }
 
             // Get all books
             [HttpGet]
