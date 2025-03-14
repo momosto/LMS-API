@@ -52,7 +52,7 @@ namespace LMS_API.Controllers
                     Status = "Borrowed"
                 };
                 db.BorrowHistories.Add(borrow);
-               // book.Quantity = book.Quantity- 1;
+                book.Quantity = book.Quantity- 1;
                 db.SaveChanges();
                 return Ok("Book borrowed successfully");
             }
@@ -198,7 +198,7 @@ namespace LMS_API.Controllers
                 return Ok("Book added successfully");
             }
 
-            [HttpPut]
+            [HttpPost]
             [Route("books/edit/{id}")]
             public IHttpActionResult EditBook(int id, string title, string author, string isbn, int quantity)
             {
