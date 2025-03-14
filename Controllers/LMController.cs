@@ -52,10 +52,42 @@ namespace LMS_API.Controllers
                     Status = "Borrowed"
                 };
                 db.BorrowHistories.Add(borrow);
-                book.Quantity -= 1;
+               // book.Quantity = book.Quantity- 1;
                 db.SaveChanges();
                 return Ok("Book borrowed successfully");
             }
+
+            [HttpGet]
+            [Route("api/library/users")]
+            public IHttpActionResult GetAllUsers()
+            {
+                
+                    var users = db.Users.ToList();
+
+                    return Ok(users);
+                
+            }
+
+
+            [HttpPost]
+            [Route("api/library/assignadmin")]
+            public IHttpActionResult AssignUserAsStudent(int userId)
+            {
+                using (var db = new LibraryDBEntities())
+                {
+                    var user = db.Users.FirstOrDefault(u => u.Id == userId);
+                    if (user == null)
+                    {
+                        return NotFound();
+                    }
+
+                    user.Role = "Admin";
+                    db.SaveChanges();
+
+                    return Ok("User role updated to Admin.");
+                }
+            }
+
 
             // Return a book
             //[HttpPost]
@@ -111,8 +143,24 @@ namespace LMS_API.Controllers
                     PasswordHash = HashPassword(password),
                     Role = role
                 };
+
+                
+
                 db.Users.Add(newUser);
                 db.SaveChanges();
+
+                var rtyuser = db.Users.FirstOrDefault(u => u.Username == username);
+
+                var newStudent = new Student
+                {
+                    Name = username,
+                    Id= rtyuser.Id,
+                    Email="test@lms.com",
+                    Phone="12345678"
+                };
+                db.Students.Add(newStudent);
+                db.SaveChanges();
+
                 return Ok("User registered successfully");
             }
 
